@@ -511,7 +511,9 @@ void JNICALL Java_org_sumi_sumi_1emu_NativeLibrary_initializeGpuDriver(JNIEnv* e
 }
 
 [[maybe_unused]] bool SupportsCustomDriver() {
-    return android_get_device_api_level() >= 28 && CheckKgslPresent();
+    // Permit access to the driver manager on supported 64-bit Android devices.
+    // This does not guarantee that an Adreno custom driver can load on other GPUs.
+    return android_get_device_api_level() >= 28;
 }
 
 jboolean JNICALL Java_org_sumi_sumi_1emu_utils_GpuDriverHelper_supportsCustomDriverLoading(
