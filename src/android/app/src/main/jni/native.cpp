@@ -459,10 +459,15 @@ int Java_org_sumi_sumi_1emu_NativeLibrary_installFileToNand(JNIEnv* env, jobject
     auto jlambdaInvokeMethod = env->GetMethodID(
         jlambdaClass, "invoke", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
     const auto callback = [env, jcallback, jlambdaInvokeMethod](size_t max, size_t progress) {
-        auto jwasCancelled = env->CallObjectMethod(jcallback, jlambdaInvokeMethod,
-                                                   Common::Android::ToJDouble(env, max),
-                                                   Common::Android::ToJDouble(env, progress));
-        return Common::Android::GetJBoolean(env, jwasCancelled);
+        jobject jmax = Common::Android::ToJLong(env, max);
+        jobject jprogress = Common::Android::ToJLong(env, progress);
+        jobject jwasCancelled = env->CallObjectMethod(
+            jcallback, jlambdaInvokeMethod, jmax, jprogress);
+        const bool cancelled = Common::Android::GetJBoolean(env, jwasCancelled);
+        env->DeleteLocalRef(jmax);
+        env->DeleteLocalRef(jprogress);
+        env->DeleteLocalRef(jwasCancelled);
+        return cancelled;
     };
 
     return static_cast<int>(
@@ -787,10 +792,15 @@ jobjectArray Java_org_sumi_sumi_1emu_NativeLibrary_verifyInstalledContents(JNIEn
     auto jlambdaInvokeMethod = env->GetMethodID(
         jlambdaClass, "invoke", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
     const auto callback = [env, jcallback, jlambdaInvokeMethod](size_t max, size_t progress) {
-        auto jwasCancelled = env->CallObjectMethod(jcallback, jlambdaInvokeMethod,
-                                                   Common::Android::ToJDouble(env, max),
-                                                   Common::Android::ToJDouble(env, progress));
-        return Common::Android::GetJBoolean(env, jwasCancelled);
+        jobject jmax = Common::Android::ToJLong(env, max);
+        jobject jprogress = Common::Android::ToJLong(env, progress);
+        jobject jwasCancelled = env->CallObjectMethod(
+            jcallback, jlambdaInvokeMethod, jmax, jprogress);
+        const bool cancelled = Common::Android::GetJBoolean(env, jwasCancelled);
+        env->DeleteLocalRef(jmax);
+        env->DeleteLocalRef(jprogress);
+        env->DeleteLocalRef(jwasCancelled);
+        return cancelled;
     };
 
     auto& session = EmulationSession::GetInstance();
@@ -810,10 +820,15 @@ jint Java_org_sumi_sumi_1emu_NativeLibrary_verifyGameContents(JNIEnv* env, jobje
     auto jlambdaInvokeMethod = env->GetMethodID(
         jlambdaClass, "invoke", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
     const auto callback = [env, jcallback, jlambdaInvokeMethod](size_t max, size_t progress) {
-        auto jwasCancelled = env->CallObjectMethod(jcallback, jlambdaInvokeMethod,
-                                                   Common::Android::ToJDouble(env, max),
-                                                   Common::Android::ToJDouble(env, progress));
-        return Common::Android::GetJBoolean(env, jwasCancelled);
+        jobject jmax = Common::Android::ToJLong(env, max);
+        jobject jprogress = Common::Android::ToJLong(env, progress);
+        jobject jwasCancelled = env->CallObjectMethod(
+            jcallback, jlambdaInvokeMethod, jmax, jprogress);
+        const bool cancelled = Common::Android::GetJBoolean(env, jwasCancelled);
+        env->DeleteLocalRef(jmax);
+        env->DeleteLocalRef(jprogress);
+        env->DeleteLocalRef(jwasCancelled);
+        return cancelled;
     };
     auto& session = EmulationSession::GetInstance();
     return static_cast<jint>(ContentManager::VerifyGameContents(

@@ -60,6 +60,10 @@ static jclass s_double_class;
 static jmethodID s_double_constructor;
 static jfieldID s_double_value_field;
 
+static jclass s_long_class;
+static jmethodID s_long_constructor;
+static jfieldID s_long_value_field;
+
 static jclass s_integer_class;
 static jmethodID s_integer_constructor;
 static jfieldID s_integer_value_field;
@@ -279,6 +283,18 @@ jmethodID GetDoubleConstructor() {
 
 jfieldID GetDoubleValueField() {
     return s_double_value_field;
+}
+
+jclass GetLongClass() {
+    return s_long_class;
+}
+
+jmethodID GetLongConstructor() {
+    return s_long_constructor;
+}
+
+jfieldID GetLongValueField() {
+    return s_long_value_field;
 }
 
 jclass GetIntegerClass() {
@@ -501,6 +517,12 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     s_double_value_field = env->GetFieldID(double_class, "value", "D");
     env->DeleteLocalRef(double_class);
 
+    const jclass long_class = env->FindClass("java/lang/Long");
+    s_long_class = reinterpret_cast<jclass>(env->NewGlobalRef(long_class));
+    s_long_constructor = env->GetMethodID(long_class, "<init>", "(J)V");
+    s_long_value_field = env->GetFieldID(long_class, "value", "J");
+    env->DeleteLocalRef(long_class);
+
     const jclass int_class = env->FindClass("java/lang/Integer");
     s_integer_class = reinterpret_cast<jclass>(env->NewGlobalRef(int_class));
     s_integer_constructor = env->GetMethodID(int_class, "<init>", "(I)V");
@@ -593,6 +615,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved) {
     env->DeleteGlobalRef(s_overlay_control_data_class);
     env->DeleteGlobalRef(s_patch_class);
     env->DeleteGlobalRef(s_double_class);
+    env->DeleteGlobalRef(s_long_class);
     env->DeleteGlobalRef(s_integer_class);
     env->DeleteGlobalRef(s_boolean_class);
     env->DeleteGlobalRef(s_player_input_class);

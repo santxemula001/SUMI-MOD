@@ -78,6 +78,10 @@ jclass GetDoubleClass();
 jmethodID GetDoubleConstructor();
 jfieldID GetDoubleValueField();
 
+jclass GetLongClass();
+jmethodID GetLongConstructor();
+jfieldID GetLongValueField();
+
 jclass GetIntegerClass();
 jmethodID GetIntegerConstructor();
 jfieldID GetIntegerValueField();
