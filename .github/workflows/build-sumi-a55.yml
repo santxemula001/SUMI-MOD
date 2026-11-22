@@ -1,4 +1,5 @@
-name: Build Sumi Android APK
+
+name: Build XCLIPSE SUMI Android APK
 
 on:
   workflow_dispatch:
@@ -33,13 +34,6 @@ jobs:
         run: |
           sdkmanager --install "platforms;android-35" "build-tools;35.0.0" "cmake;3.31.6" "ndk;29.0.13113456"
 
-      - name: Install SDK
-        run: |
-          sdkmanager "platforms;android-35" \
-            "build-tools;35.0.0" \
-            "cmake;3.31.6" \
-            "ndk;29.0.13113456"
-
       - name: Setup Vulkan
         uses: humbletim/setup-vulkan-sdk@v1.2.1
         with:
@@ -56,9 +50,16 @@ jobs:
           chmod +x gradlew
           ./gradlew --no-daemon --stacktrace assembleMainlineRelease
 
+      - name: Rename APK
+        run: |
+          mkdir -p output
+          cp src/android/app/build/outputs/apk/mainline/release/*.apk output/XCLIPSE-SUMI.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Sumi-Mainline-Release
-          path: src/android/app/build/outputs/apk/mainline/release/*.apk
+          name: XCLIPSE-SUMI
+          path: output/XCLIPSE-SUMI.apk
           if-no-files-found: error
+          retention-days: 7
+
